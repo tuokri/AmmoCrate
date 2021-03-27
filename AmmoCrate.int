@@ -1,0 +1,23 @@
+[RORoleInfoSouthernEngineerAC]
+MyName="Combat Engineer"
+
+[RORoleInfoNorthernSapperAC]
+MyName="Sapper"
+
+[ROItem_PlaceableAmmoCrate_04]
+DisplayName="Placeable Ammo Crate"
+ShortDisplayName="Ammo Crate"
+CapitalizedDisplayName="PLACEABLE AMMO CRATE"
+Description="A placable ammo crate."
+
+[ROItem_USPlaceableAmmoCrate_04]
+DisplayName="Placeable Ammo Crate"
+ShortDisplayName="Ammo Crate"
+CapitalizedDisplayName="PLACEABLE AMMO CRATE"
+Description="A placable ammo crate."
+
+[ROItem_VCPlaceableAmmoCrate_04]
+DisplayName="Placeable Ammo Crate"
+ShortDisplayName="Ammo Crate"
+CapitalizedDisplayName="PLACEABLE AMMO CRATE"
+Description="A placable ammo crate."
