@@ -1,4 +1,4 @@
-class RORoleInfoNorthernSapperAC extends RORoleInfoNorthernInfantry;
+class RORoleInfoNorthernSapperAC extends RORoleInfoNorthernSapper;
 
 DefaultProperties
 {

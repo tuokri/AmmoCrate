@@ -10,7 +10,20 @@ function PreBeginPlay()
     ROGameInfo(WorldInfo.Game).PlayerControllerClass = class'ACPlayerController';
 }
 
-simulated function ModifyPlayer(Pawn Other)
+function ModifyPlayer(Pawn Other)
 {
-    ACPlayerController(Other.Controller).ReplaceRoles();
+    local ACPlayerController ACPC;
+
+    ACPC = ACPlayerController(Other.Controller);
+
+    if (ACPC == None)
+    {
+        `log("Error replacing roles");
+        return;
+    }
+
+    ACPC.ReplaceRoles();
+    ACPC.ClientReplaceRoles();
+    ACPC.ReplaceInventoryManager();
+    ACPC.ClientReplaceInventoryManager();
 }

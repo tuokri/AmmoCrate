@@ -1,5 +1,21 @@
 class ACPlayerController extends ROPlayerController;
 
+simulated function PreBeginPlay()
+{
+    super.PreBeginPlay();
+
+    if (WorldInfo.NetMode == NM_Standalone)
+    {
+        ReplaceRoles();
+        ReplaceInventoryManager();
+    }
+}
+
+simulated function ReplaceInventoryManager()
+{
+    ROPawn(Pawn).InventoryManagerClass = class'ACInventoryManager';
+}
+
 simulated function ReplaceRoles()
 {
     local ROMapInfo ROMI;
@@ -9,11 +25,15 @@ simulated function ReplaceRoles()
 
     if (ROMI != None)
     {
+        `log("Replacing roles...");
+
         ForEach ROMI.NorthernRoles(RORC)
         {
-            if (RORC.RoleInfoClass == class'RORoleInfoNorthernSapper')
+            if (RORC.RoleInfoClass == class'RORoleInfoNorthernSapper'
+                || RORC.RoleInfoClass == class'RORoleInfoNorthernSapperNLF')
             {
                 RORC.RoleInfoClass = class'RORoleInfoNorthernSapperAC';
+                `log("Replaced RoleInfoClass " $ RORC.RoleInfoClass);
             }
         }
 
@@ -22,14 +42,18 @@ simulated function ReplaceRoles()
             if (RORC.RoleInfoClass == class'RORoleInfoSouthernEngineer')
             {
                 RORC.RoleInfoClass = class'RORoleInfoSouthernEngineerAC';
+                `log("Replaced RoleInfoClass " $ RORC.RoleInfoClass);
             }
         }
     }
 }
 
-simulated function PreBeginPlay()
+reliable client function ClientReplaceRoles()
 {
-    super.PreBeginPlay();
-
     ReplaceRoles();
+}
+
+reliable client function ClientReplaceInventoryManager()
+{
+    ReplaceInventoryManager();
 }
