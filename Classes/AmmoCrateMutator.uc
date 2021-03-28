@@ -11,6 +11,7 @@ function PreBeginPlay()
     ROGameInfo(WorldInfo.Game).PlayerReplicationInfoClass = class'ACPlayerReplicationInfo';
 }
 
+/*
 function ModifyPlayer(Pawn Other)
 {
     local RORoleInfo RORI;
@@ -29,6 +30,7 @@ function ModifyPlayer(Pawn Other)
 
     super.ModifyPlayer(Other);
 }
+*/
 
 function NotifyLogin(Controller NewPlayer)
 {
