@@ -1,59 +1,100 @@
-
 class AmmoCrateMutator extends ROMutator
-    config(AmmoCrate)
-    hidecategories(Navigation,Movement,Collision);
+    config(AmmoCrate);
 
-var config int NorthernSapperCount;
-var config int SouthernEngineerCount;
+var RORoleInfoClasses RORICSouth;
+var RORoleInfoClasses RORICNorth;
 
-function SetAmmoCrate()
+function PreBeginPlay()
 {
-    local ROMapInfo ROMI;
-    local int I;
 
-    LogInternal("AmmoCrateMutator SetAmmoCrate");
-    ROMI = ROMapInfo(WorldInfo.GetMapInfo());
-    // End:0x7A
-    if(!ROMI.bInitializedRoles)
-    {
-        return;
-    }
-    ClearTimer('SetAmmoCrate');
-    I = 0;
-    J0x119:
-    // End:0x2BA [Loop If]
-    if(I < ROMI.NorthernRoles.Length)
-    {
-        // End:0x229
-        if(ROMI.NorthernRoles[I].RoleInfoClass.default.ClassIndex == `ROCI_ENGINEER)
-        {
-            ROMI.NorthernRoles[I].RoleInfoClass = class'RORoleInfoNorthernSapperAC';
-            ROMI.NorthernRoles[I].Count = byte(NorthernSapperCount);
-        };
-        // End:0x2AC
-        goto J0x119;
-    }
-    I = 0;
-    J0x2C5:
-    // End:0x466 [Loop If]
-    if(I < ROMI.SouthernRoles.Length)
-    {
-        // End:0x3D5
-        if(ROMI.SouthernRoles[I].RoleInfoClass.default.ClassIndex == `ROCI_ENGINEER)
-        {
-            ROMI.SouthernRoles[I].RoleInfoClass = class'RORoleInfoSouthernEngineerAC';
-            ROMI.SouthernRoles[I].Count = byte(SouthernEngineerCount);
-        };
-        // End:0x458
-        goto J0x2C5;
-    }
-    //return;    
+    ROGameInfo(WorldInfo.Game).PlayerControllerClass = class'ROPlayerController';
+    ROGameInfo(WorldInfo.Game).PlayerReplicationInfoClass = class'ROPlayerReplicationInfo';
+    ROGameInfo(WorldInfo.Game).PawnHandlerClass = class'ROPawnHandler';
+    OverrideGameInfo();
+
+    // VerifyConfig();
 }
 
 function PostBeginPlay()
 {
-    super(Actor).PostBeginPlay();
-    LogInternal("AmmoCrateMutator PostBeginPlay");
-    SetTimer(1.0, true, 'SetAmmoCrate');
-    //return;    
+    ReplacePawns();
+}
+
+
+simulated function OverrideGameInfo()
+{
+    local ROGameInfo ROGI;
+    local ROMapInfo ROMI;
+
+    ROMI = ROMapInfo(WorldInfo.GetMapInfo());
+
+    ROGI.Reset();
+}
+
+/*
+function float VerifyFloatModifierMin(Name ModifierName, float Modifier,
+    float MinValue, float DefaultValue)
+{
+    if (Modifier < `NORTH_PAWN_MODIFIER_MIN)
+    {
+            MinValue $ " using default value: " $ DefaultValue, 'Config');
+        Modifier = DefaultValue;
+    }
+    return Modifier;
+}
+*/
+
+simulated function ReplacePawns()
+{
+    ROGameInfo(WorldInfo.Game).SouthRoleContentClasses = RORICSouth;
+    ROGameInfo(WorldInfo.Game).NorthRoleContentClasses = RORICNorth;
+}
+
+simulated function ModifyNorthPlayer(out Pawn Other)
+{
+    local ACNorthPawn NP;
+    local RORoleInfo RORI;
+    local ACRoleInfoNorthernInfantry RONI;
+
+    NP = ACNorthPawn(Other);
+
+    RORI = ROPlayerController(NP.Controller).GetRoleInfo();
+    RONI = ACRoleInfoNorthernInfantry(RORI);
+    RONI.ExtraPawnModifiers(NP);
+}
+
+simulated function ModifySouthPlayer(out Pawn Other)
+{
+    local ACSouthPawn SP;
+
+    SP = ACSouthPawn(Other);
+}
+
+simulated function ModifyPlayer(Pawn Other)
+{
+    super.ModifyPlayer(Other);
+
+    // ROPlayerController(Other.Controller).ClientSetHUD(ACHUDType);
+
+    if (Other.GetTeamNum() == `ALLIES_TEAM_INDEX)
+    {
+        ModifySouthPlayer(Other);
+    }
+    else if (Other.GetTeamNum() == `AXIS_TEAM_INDEX)
+    {
+        ModifyNorthPlayer(Other);
+    }
+
+    ReplacePawns();
+}
+
+simulated function ModifyPreLogin(string Options, string Address, out string ErrorMessage)
+{
+    ReplacePawns();
+}
+
+DefaultProperties
+{
+    RORICSouth=(LevelContentClasses=("AmmoCrate.ACSouthPawn"))
+    RORICNorth=(LevelContentClasses=("AmmoCrate.ACNorthPawn"))
 }
