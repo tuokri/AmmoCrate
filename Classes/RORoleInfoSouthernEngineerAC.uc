@@ -1,11 +1,11 @@
-class RORoleInfoSouthernEngineerAC extends ACRoleInfoSouthernInfantry;
+class RORoleInfoSouthernEngineerAC extends RORoleInfoSouthernInfantry;
 
 DefaultProperties
 {
 	RoleType=RORIT_Engineer
 	ClassTier=3
 	ClassIndex=`ROCI_ENGINEER // 4
-	
+
 	Items[RORIGM_Default]={(
 		PrimaryWeapons=(class'ROGame.ROWeap_M3A1_SMG',class'ROGame.ROWeap_M37_Shotgun',class'ROGame.ROWeap_M2_Carbine',class'ROGame.ROWeap_M9_Flamethrower'),
 		DisableSecondaryForPrimary=(true, true, true, false),
@@ -15,7 +15,7 @@ DefaultProperties
 	)}
 
 	bAllowPistolsInRealism=false
-	
+
 	ClassIcon=Texture2D'VN_UI_Textures.menu.class_icon_sapper'
 	ClassIconLarge=Texture2D'VN_UI_Textures.menu.ProfileStats.class_icon_large_sapper'
 }
