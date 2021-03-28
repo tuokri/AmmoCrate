@@ -11,7 +11,7 @@ class ROItem_VCPlaceableAmmoCrate_04 extends ROItem_PlaceableAmmoCrate_04;
 
 DefaultProperties
 {
-	WeaponContentClass(0)="ROGameContent.ROItem_VCPlaceableAmmoCrate_Content_04"
+	WeaponContentClass(0)="AmmoCrate.ROItem_VCPlaceableAmmoCrate_Content_04"
 	RoleSelectionImage(0)=Texture2D'VN_UI_Textures.WeaponTex.VN_Binocs'
 
 	ClassConstructorProxy=class'ROVCAmmoCreateConstructorProxy'

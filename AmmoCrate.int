@@ -1,8 +1,8 @@
 [RORoleInfoSouthernEngineerAC]
-MyName="Combat Engineer"
+MyName="COMBAT ENGINEER"
 
 [RORoleInfoNorthernSapperAC]
-MyName="Sapper"
+MyName="SAPPER"
 
 [ROItem_PlaceableAmmoCrate_04]
 DisplayName="Placeable Ammo Crate"

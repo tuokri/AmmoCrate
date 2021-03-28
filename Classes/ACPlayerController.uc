@@ -4,11 +4,43 @@ simulated function PreBeginPlay()
 {
     super.PreBeginPlay();
 
-    if (WorldInfo.NetMode == NM_Standalone)
+    if (WorldInfo.NetMode == NM_Standalone || Role == ROLE_Authority)
     {
         ReplaceRoles();
         ReplaceInventoryManager();
     }
+}
+
+/*
+simulated function PostBeginPlay()
+{
+    local ROMapInfo ROMI;
+    local RORoleCount RORC;
+
+    `log("ACPlayerController.PostBeginPlay()");
+
+    super.PostBeginPlay();
+
+    ROMI = ROMapInfo(WorldInfo.GetMapInfo());
+
+    ForEach ROMI.NorthernRoles(RORC)
+    {
+        `log("RoleInfoClass = " $ RORC.RoleInfoClass);
+    }
+
+    ForEach ROMI.SouthernRoles(RORC)
+    {
+        `log("RoleInfoClass = " $ RORC.RoleInfoClass);
+    }
+}
+*/
+
+simulated function ReceivedGameClass(class<GameInfo> GameClass)
+{
+    super.ReceivedGameClass(GameClass);
+
+    ReplaceRoles();
+    ReplaceInventoryManager();
 }
 
 simulated function ReplaceInventoryManager()
@@ -20,6 +52,7 @@ simulated function ReplaceRoles()
 {
     local ROMapInfo ROMI;
     local RORoleCount RORC;
+    local int I;
 
     ROMI = ROMapInfo(WorldInfo.GetMapInfo());
 
@@ -27,23 +60,27 @@ simulated function ReplaceRoles()
     {
         `log("Replacing roles...");
 
+        I = 0;
         ForEach ROMI.NorthernRoles(RORC)
         {
             if (RORC.RoleInfoClass == class'RORoleInfoNorthernSapper'
                 || RORC.RoleInfoClass == class'RORoleInfoNorthernSapperNLF')
             {
-                RORC.RoleInfoClass = class'RORoleInfoNorthernSapperAC';
+                ROMI.NorthernRoles[I].RoleInfoClass = class'RORoleInfoNorthernSapperAC';
                 `log("Replaced RoleInfoClass " $ RORC.RoleInfoClass);
             }
+            I++;
         }
 
+        I = 0;
         ForEach ROMI.SouthernRoles(RORC)
         {
             if (RORC.RoleInfoClass == class'RORoleInfoSouthernEngineer')
             {
-                RORC.RoleInfoClass = class'RORoleInfoSouthernEngineerAC';
+                ROMI.SouthernRoles[I].RoleInfoClass = class'RORoleInfoSouthernEngineerAC';
                 `log("Replaced RoleInfoClass " $ RORC.RoleInfoClass);
             }
+            I++;
         }
     }
 }

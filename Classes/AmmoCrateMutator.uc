@@ -8,13 +8,33 @@ function PreBeginPlay()
     super.PreBeginPlay();
 
     ROGameInfo(WorldInfo.Game).PlayerControllerClass = class'ACPlayerController';
+    ROGameInfo(WorldInfo.Game).PlayerReplicationInfoClass = class'ACPlayerReplicationInfo';
 }
 
 function ModifyPlayer(Pawn Other)
 {
+    local RORoleInfo RORI;
+    local ACPlayerReplicationInfo ACPRI;
+    local class<ROWeapon> ROWC;
+
+    ACPRI = ACPlayerReplicationInfo(Other.PlayerReplicationInfo);
+    RORI = ACPRI.RoleInfo;
+
+    `log("RORI = " $ RORI);
+
+    ForEach RORI.Items[RORIGM_Default].OtherItems(ROWC)
+    {
+        `log("Item = " $ ROWC);
+    }
+
+    super.ModifyPlayer(Other);
+}
+
+function NotifyLogin(Controller NewPlayer)
+{
     local ACPlayerController ACPC;
 
-    ACPC = ACPlayerController(Other.Controller);
+    ACPC = ACPlayerController(NewPlayer);
 
     if (ACPC == None)
     {
@@ -26,4 +46,6 @@ function ModifyPlayer(Pawn Other)
     ACPC.ClientReplaceRoles();
     ACPC.ReplaceInventoryManager();
     ACPC.ClientReplaceInventoryManager();
+
+    super.NotifyLogin(NewPlayer);
 }
